@@ -1,66 +1,40 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'https://food-39rc-dev.fl0.io/api'; // Reemplaza con la URL de tu API
+const API_URL = "https://food-39rc-dev.fl0.io/api"; // Reemplaza con la URL de tu API
 
-const createProduct = async (productData) => {
+const makeRequest = async (url, data, method = "get") => {
   try {
-    const response = await axios.post(`${API_URL}/products`, productData);
+    const response = await axios({
+      method,
+      url: `${API_URL}${url}`,
+      data,
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-const getProducts = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/products`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const createProduct = async (productData) => {
+  return makeRequest("/products", productData, "post");
 };
 
-const getProductById = async (productId) => {
-  try {
-    const response = await axios.get(`${API_URL}/products/${productId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const getProducts = async () => {
+  return makeRequest("/products");
 };
 
-const updateProduct = async (productId, productData) => {
-  try {
-    const response = await axios.patch(`${API_URL}/products/${productId}`, productData);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const getProductById = async (productId) => {
+  return makeRequest(`/products/${productId}`);
 };
 
-const deleteProduct = async (productId) => {
-  try {
-    const response = await axios.delete(`${API_URL}/products/${productId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const updateProduct = async (productId, productData) => {
+  return makeRequest(`/products/${productId}`, productData, "patch");
 };
 
-const seedProducts = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/seed`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+export const deleteProduct = async (productId) => {
+  return makeRequest(`/products/${productId}`, null, "delete");
 };
 
-export {
-  createProduct,
-  getProducts,
-  getProductById,
-  updateProduct,
-  deleteProduct,
-  seedProducts,
+export const seedProducts = async () => {
+  return makeRequest("/seed");
 };

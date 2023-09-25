@@ -3,7 +3,7 @@ import Dashboard from '@/components/dashboard';// Importa el componente Dashboar
 
 export default function Home() {
   return (
-    <div className='bg-white h-full text-black p-4'>
+    <div className='bg-white h-full text-black p-4 '>
       <Dashboard /> 
     </div>
   );

@@ -4,7 +4,7 @@ import { IconButton } from "@mui/material";
 
 const Footer = () => {
   return (
-    <div className="bg-blue-600 py-4 text-white ">
+    <div className="bg-blue-600 py-4 text-white fixed bottom-0 w-full">
       <div className="container mx-auto px-4">
         <div className="flex justify-center items-center">
           <p className="text-sm">
@@ -20,7 +20,6 @@ const Footer = () => {
               <GitHubIcon />
             </IconButton>
           </a>
-          {/* Agrega el componente Button con un texto y una función onClick */}
         </div>
       </div>
     </div>

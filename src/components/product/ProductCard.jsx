@@ -7,9 +7,7 @@ const ProductCard = ({ product, onAddToCart }) => {
   return (
     <div className="bg-white shadow-md p-4 rounded-lg">
       <Image
-        src={
-          product.imageUrl
-        } // Reemplaza con la URL de la imagen del producto
+        src="/images/image.jpg" // Reemplaza con la URL de la imagen del producto
         alt={product.name}
         className="w-full h-auto"
         width={300}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Button, makeStyles, Grid, Paper, IconButton } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Image from 'next/image';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -28,7 +29,7 @@ const ProductDetail = ({ product, onAddToCart }) => {
     <Paper elevation={3} className={classes.paper}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} className={classes.imageContainer}>
-          <img src={product.imageUrl} alt={product.name} className={classes.image} />
+          <Image src={product.imageUrl} alt={product.name} className={classes.image} />
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="h5" gutterBottom>

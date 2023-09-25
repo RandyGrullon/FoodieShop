@@ -1,191 +1,150 @@
-import React, { useState } from "react";
-import {
-  Paper,
-  Typography,
-  Avatar,
-  IconButton,
-  Button,
-  Modal,
-  TextField,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import React, { useState, useEffect, useReducer } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMapMarkerAlt, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
+import Image from "next/image";
+import ModalEditInfo from "@/components/common/ModalEditInfo";
+import ModalEditImageProfile from "@/components/common/ModalEditImageProfile";
 
-const UserProfile = ({ onEditProfile }) => {
-  const userFromLocalStorage =
-    typeof window !== "undefined"
-      ? JSON.parse(localStorage.getItem("foodie-info-user"))
-      : null;
-
-  // Estado para controlar la apertura/cierre del modal de edición
+const Profile = ({ onEditProfile }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [user, setUser] = useState({});
+  const [editedUser, dispatch] = useReducer(
+    (state, action) => ({ ...state, ...action }),
+    {}
+  );
 
-  // Estado para mantener los datos editados del usuario
-  const [editedUser, setEditedUser] = useState({
-    name: userFromLocalStorage?.name || "",
-    email: userFromLocalStorage?.email || "",
-    address: userFromLocalStorage?.address || "",
-    phone: userFromLocalStorage?.phone || "",
-    description: userFromLocalStorage?.description || "",
-    jobPosition: userFromLocalStorage?.jobPosition || "",
-    city: userFromLocalStorage?.city || "",
-  });
+  useEffect(() => {
+    const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+    setUser(userFromLocalStorage);
+  }, []);
 
-  // Manejador para abrir el modal de edición
   const handleEditClick = () => {
     setIsEditModalOpen(true);
   };
 
-  // Manejador para guardar los cambios en el modal de edición
   const handleSaveChanges = () => {
-    // Actualiza el localStorage con los datos editados
-    localStorage.setItem("foodie-info-user", JSON.stringify(userFromLocalStorage + editedUser));
-
-    // Cierra el modal de edición
+    const updatedUser = { ...user, ...editedUser };
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
     setIsEditModalOpen(false);
   };
 
-  // Manejador para cerrar el modal de edición
-  const handleCloseModal = () => {
+  const handleCancelChanges = () => {
+    dispatch(user);
     setIsEditModalOpen(false);
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    dispatch({ [name]: value });
+  };
+
+  const handleEditImageClick = () => {
+    setIsImageModalOpen(true);
+  };
+
+  const handleImageDrop = (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      dispatch({ image: event.target.result });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSaveImage = () => {
+    const updatedUser = { ...user, ...editedUser };
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setIsImageModalOpen(false);
   };
 
   return (
-    <div className="max-w-lg mx-auto my-10 bg-white rounded-lg shadow-md p-5 text-black">
-      <Avatar
-        alt=""
-        src={userFromLocalStorage?.avatarUrl || "/default-avatar.png"}
-        className="w-32 h-32 rounded-full mx-auto"
-      />
-      <div className="flex justify-center items-center">
-        <Typography
-          variant="h5"
-          className="text-center text-2xl font-semibold mt-3"
-        >
-          {editedUser.name}
-        </Typography>
-        <IconButton
-          className="text-blue-500 hover:text-blue-700 ml-3"
-          color="primary"
-          aria-label="Editar perfil"
-          onClick={handleEditClick}
-        >
-          <EditIcon />
-        </IconButton>
-      </div>
-      <Typography className="text-center text-gray-600 mt-1">
-        {editedUser.jobPosition}
-      </Typography>
-
-      <div className="mt-5">
-        <h3 className="text-xl font-semibold">Bio</h3>
-        <p className="text-gray-600 mt-2">{editedUser.description}</p>
-      </div>
-      {/* dirección */}
-      <div className="mt-5">
-        <h3 className="text-xl font-semibold">Dirección</h3>
-        <p className="text-gray-600 mt-2">
-          {`${editedUser.address}, ${editedUser.city}`}
-        </p>
-      </div>
-
-      <div className="mt-5">
-        <h3 className="text-xl font-semibold">Información de Contacto</h3>
-        <Typography className="text-gray-600 mt-2">
-          Correo Electrónico: {editedUser.email}
-        </Typography>
-        <Typography className="text-gray-600 mt-2">
-          Teléfono: {editedUser.phone}
-        </Typography>
-      </div>
-
-      <Modal open={isEditModalOpen} onClose={handleCloseModal}>
-        <div className="bg-white p-4 w-96 mx-auto mt-20 text-black text-center">
-          <Typography variant="h6" gutterBottom>
-            Editar Perfil
-          </Typography>
-          <TextField
-            label="Nombre"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={editedUser.name}
-            onChange={(e) =>
-              setEditedUser({ ...editedUser, name: e.target.value })
-            }
-          />
-          <TextField
-            label="Correo Electrónico"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={editedUser.email}
-            onChange={(e) =>
-              setEditedUser({ ...editedUser, email: e.target.value })
-            }
-          />
-          <TextField
-            label="Posición"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={editedUser.jobPosition}
-            onChange={(e) =>
-              setEditedUser({ ...editedUser, jobPosition: e.target.value })
-            }
-          />
-          <TextField
-            label="Dirección"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={editedUser.address}
-            onChange={(e) =>
-              setEditedUser({ ...editedUser, address: e.target.value })
-            }
-          />
-          <TextField
-            label="Ciudad"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={editedUser.city}
-            onChange={(e) =>
-              setEditedUser({ ...editedUser, city: e.target.value })
-            }
-          />
-          <TextField
-            label="Teléfono"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={editedUser.phone}
-            onChange={(e) =>
-              setEditedUser({ ...editedUser, phone: e.target.value })
-            }
-          />
-          <TextField
-            label="Descripción"
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            value={editedUser.description}
-            onChange={(e) =>
-              setEditedUser({ ...editedUser, description: e.target.value })
-            }
-          />
-          <div className="flex justify-center mt-4">
-            <Button
-              variant="contained"
-              className="bg-white text-black hover:bg-blue-500 hover:text-white"
-              onClick={handleSaveChanges}
+    <div className="container mx-auto px-4 text-black mt-5 ">
+      <div className=" flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">
+        <div className="px-6">
+          <div className="flex flex-wrap justify-center">
+            <div
+              className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center relative"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
-              Guardar Cambios
-            </Button>
+              <div className="border-2 border-black rounded-full mt-5 relative">
+                <Image
+                  alt="..."
+                  src={user.image}
+                  className="shadow-xl rounded-full h-auto align-middle border-none max-w-150-px"
+                  width={150}
+                  height={150}
+                />
+                {isHovered && (
+                  <div
+                    className="absolute top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full"
+                    onClick={handleEditImageClick}
+                  >
+                    <FontAwesomeIcon
+                      icon={faPencilAlt}
+                      className="text-white text-lg cursor-pointer"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center"></div>
+            <div className="w-full lg:w-4/12 px-4 lg:order-1">
+              <div className="flex justify-center py-4 lg:pt-4 pt-8">
+                {/* Add your user stats here */}
+              </div>
+            </div>
+          </div>
+          <div className="text-center mt-12">
+            <div className="flex justify-center items-center gap-3">
+              <h3 className="text-4xl font-semibold leading-normal mb-2 text-blueGray-700">
+                {user.name || "Unknown Name"}
+              </h3>
+              <FontAwesomeIcon
+                icon={faPencilAlt}
+                className="text-black text-lg cursor-pointer"
+                onClick={handleEditClick}
+              />
+            </div>
+
+            <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 uppercase text-center">
+              <FontAwesomeIcon
+                icon={faMapMarkerAlt}
+                className="mr-2 text-lg text-blueGray-400"
+              />
+              <b>Direccion:</b> {user.address || "Unknown Address"}
+            </div>
+            <div className="mb-2 text-blueGray-600">
+              <b>Posicion laboral:</b> {user.jobPosition || "Unknown Position"}
+            </div>
+            <div className="mb-2 text-blueGray-600">
+              <b> Descripcion:</b> {user.description || "Unknown Description"}
+            </div>
           </div>
         </div>
-      </Modal>
+      </div>
+
+      <ModalEditInfo
+        isOpen={isEditModalOpen}
+        onClose={handleCancelChanges}
+        onSave={handleSaveChanges}
+        user={user}
+        editedUser={editedUser}
+        dispatch={dispatch}
+        onInputChange={handleInputChange}
+      />
+      <ModalEditImageProfile
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        onImageDrop={handleImageDrop}
+        onSaveImage={handleSaveImage}
+      />
     </div>
   );
 };
 
-export default UserProfile;
+export default Profile;

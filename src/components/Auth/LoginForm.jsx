@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -31,25 +31,30 @@ const LoginForm = () => {
     });
   };
 
+  //useEffect
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      router.push("/");
+    }
+  }, [router]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
-      const response = await authApi.login(credentials);
-
-      if (response && response.email) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            email: response.email,
-            name: response.name,
-            token: response.token,
-          })
-          
-        );
-        router.push(`/`);
+      const { email, password } = credentials;
+      const response = await authApi.login({ email, password });
+  
+      // Save user in localStorage
+      if (response?.email) {
+        const user = {
+          ...response,
+          token: response.token,
+        };
+        localStorage.setItem("user", JSON.stringify(user));
+        router.push("/"); // Cambia esto al URL deseado, por ejemplo, "/home"
       } else {
         setError("Credenciales incorrectas. Inténtalo de nuevo.");
       }
@@ -62,6 +67,9 @@ const LoginForm = () => {
       setLoading(false);
     }
   };
+
+  
+
 
   return (
     <Container className="flex items-center justify-center h-screen">
