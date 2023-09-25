@@ -1,15 +1,12 @@
 import React from 'react';
 import { Container, Typography, CssBaseline } from '@mui/material';
-import LoginForm from '../components/auth/LoginForm';
+import LoginForm from '@/components/Auth/LoginForm';
 
 const LoginPage = () => {
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main">
       <CssBaseline />
       <div>
-        <Typography variant="h4" align="center">
-          Iniciar Sesión
-        </Typography>
         <LoginForm />
       </div>
     </Container>

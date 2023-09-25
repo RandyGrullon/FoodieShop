@@ -1,33 +1,8 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, InputBase, Paper } from '@mui/material';
-import { makeStyles } from '@mui/styles'; // Actualiza esta importación
-import SearchIcon from '@mui/icons-material/Search';
-
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    backgroundColor: theme.palette.primary.main,
-  },
-  toolBar: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  paper: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '2px 4px',
-    width: 400,
-  },
-  inputBase: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  iconButton: {
-    padding: 10,
-  },
-}));
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 const SearchBar = ({ onSearch }) => {
-  const classes = useStyles();
   const [searchTerm, setSearchTerm] = useState('');
 
   const handleSearch = () => {
@@ -39,27 +14,23 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <AppBar position="static" className={classes.appBar}>
-      <Toolbar className={classes.toolBar}>
-        <Paper component="form" className={classes.paper}>
-          <InputBase
-            className={classes.inputBase}
-            placeholder="Buscar productos"
-            inputProps={{ 'aria-label': 'buscar productos' }}
-            value={searchTerm}
-            onChange={handleInputChange}
-          />
-          <IconButton
-            type="button"
-            className={classes.iconButton}
-            aria-label="buscar"
-            onClick={handleSearch}
-          >
-            <SearchIcon />
-          </IconButton>
-        </Paper>
-      </Toolbar>
-    </AppBar>
+    <div className="bg-white rounded-full">
+      <div className="flex justify-center">
+        <div className="w-96">
+          <div className="flex items-center rounded-md p-2">
+            <FontAwesomeIcon icon={faSearch} className="text-gray-500 mr-2" />
+            <input
+              className="flex-1 appearance-none outline-none border-none py-1 px-2 leading-5"
+              type="text"
+              placeholder="Buscar productos"
+              aria-label="buscar productos"
+              value={searchTerm}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

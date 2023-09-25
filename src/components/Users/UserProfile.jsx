@@ -1,34 +1,14 @@
 import React from 'react';
-import { makeStyles, Paper, Typography, Avatar, IconButton, Button } from '@mui/material';
+import { Paper, Typography, Avatar, IconButton, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(3),
-  },
-  avatarContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    marginBottom: theme.spacing(2),
-  },
-  avatar: {
-    width: theme.spacing(10),
-    height: theme.spacing(10),
-  },
-  editButton: {
-    marginLeft: 'auto',
-  },
-}));
-
 const UserProfile = ({ user, onEditProfile }) => {
-  const classes = useStyles();
-
   return (
-    <Paper elevation={3} className={classes.paper}>
-      <div className={classes.avatarContainer}>
-        <Avatar alt={user.name} src={user.avatarUrl} className={classes.avatar} />
+    <Paper elevation={3} className="p-4">
+      <div className="flex justify-center mb-4">
+        <Avatar alt={user.name} src={user.avatarUrl} className="w-20 h-20" />
         <IconButton
-          className={classes.editButton}
+          className="ml-auto"
           color="primary"
           aria-label="Editar perfil"
           onClick={onEditProfile}

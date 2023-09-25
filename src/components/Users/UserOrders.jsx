@@ -1,22 +1,20 @@
 import React from 'react';
-import { makeStyles, Paper, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  Paper,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(3),
-  },
-  table: {
-    minWidth: 650,
-  },
-}));
-
 const UserOrders = ({ orders }) => {
-  const classes = useStyles();
-
   return (
-    <Paper elevation={3} className={classes.paper}>
-      <Typography variant="h5" gutterBottom>
+    <Paper elevation={3} className="p-4">
+      <Typography variant="h5" className="mb-4">
         Historial de Compras
       </Typography>
       {orders.length === 0 ? (
@@ -25,7 +23,7 @@ const UserOrders = ({ orders }) => {
         </Typography>
       ) : (
         <TableContainer>
-          <Table className={classes.table} size="small">
+          <Table className="min-w-full" size="small">
             <TableHead>
               <TableRow>
                 <TableCell>Fecha</TableCell>

@@ -1,25 +1,15 @@
-import React from 'react';
-import { makeStyles, Paper, Typography, TextField, Button } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Paper,
+  Typography,
+  TextField,
+  Button,
+} from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    padding: theme.spacing(3),
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(3),
-  },
-  submitButton: {
-    marginTop: theme.spacing(2),
-  },
-}));
-
 const UserSettings = ({ user, onSaveSettings }) => {
-  const classes = useStyles();
-
-  const [name, setName] = React.useState(user.name);
-  const [email, setEmail] = React.useState(user.email);
+  const [name, setName] = useState(user.name);
+  const [email, setEmail] = useState(user.email);
 
   const handleSaveSettings = () => {
     const updatedUser = {
@@ -31,12 +21,12 @@ const UserSettings = ({ user, onSaveSettings }) => {
   };
 
   return (
-    <Paper elevation={3} className={classes.paper}>
-      <AccountCircleIcon fontSize="large" color="primary" />
-      <Typography variant="h5" gutterBottom>
+    <Paper elevation={3} className="p-4">
+      <AccountCircleIcon fontSize="large" className="text-primary" />
+      <Typography variant="h5" className="mb-4">
         Ajustes de Usuario
       </Typography>
-      <form className={classes.form}>
+      <form className="w-full">
         <TextField
           variant="outlined"
           margin="normal"
@@ -44,6 +34,7 @@ const UserSettings = ({ user, onSaveSettings }) => {
           label="Nombre"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="mb-4"
         />
         <TextField
           variant="outlined"
@@ -52,11 +43,12 @@ const UserSettings = ({ user, onSaveSettings }) => {
           label="Correo Electrónico"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="mb-4"
         />
         <Button
           variant="contained"
           color="primary"
-          className={classes.submitButton}
+          className="mt-4"
           onClick={handleSaveSettings}
         >
           Guardar Ajustes

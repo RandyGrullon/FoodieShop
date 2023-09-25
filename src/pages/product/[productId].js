@@ -54,12 +54,18 @@ const ProductDetailPage = () => {
     return <div>Cargando...</div>;
   }
 
+  // Define tu función onAddToCart aquí o importala desde donde esté definida.
+  const tuFuncionOnAddToCart = (product) => {
+    // Implementa la lógica para agregar el producto al carrito aquí.
+    // Puedes usar el estado global del carrito o realizar una solicitud a la API, según tu aplicación.
+  };
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>
         Detalles del Producto
       </Typography>
-      <ProductCard product={product} />
+      <ProductCard product={product} onAddToCart={tuFuncionOnAddToCart} />
       <ProductDetail product={product} />
       <Typography variant="h5" gutterBottom>
         Productos Relacionados

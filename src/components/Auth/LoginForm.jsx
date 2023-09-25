@@ -1,28 +1,27 @@
-import React, { useState } from 'react';
-import { makeStyles, Container, Typography, TextField, Button, CircularProgress } from '@mui/material';
-import { useHistory } from 'react-router-dom';
-import authApi from '../../api/auth'; // Importa las funciones del archivo auth.js
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    marginTop: theme.spacing(2),
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-  },
-}));
+import React, { useState } from "react";
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  CircularProgress,
+  Box,
+  Grid,
+  Card,
+  CardContent,
+} from "@mui/material";
+import authApi from "../../pages/api/auth";
+import Image from "next/image";
+import { useRouter } from "next/router";
 
 const LoginForm = () => {
-  const classes = useStyles();
-  const history = useHistory();
   const [credentials, setCredentials] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,60 +33,109 @@ const LoginForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      // Llama a la función de inicio de sesión en el archivo auth.js
       const response = await authApi.login(credentials);
 
-      // Verifica si la respuesta contiene datos de usuario
-      if (response && response.user) {
-        // Redirige a la página de perfil del usuario
-        history.push('/profile');
+      if (response && response.email) {
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            email: response.email,
+            name: response.name,
+            token: response.token,
+          })
+          
+        );
+        router.push(`/`);
       } else {
-        setError('Credenciales incorrectas. Inténtalo de nuevo.');
+        setError("Credenciales incorrectas. Inténtalo de nuevo.");
       }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      setError('Se produjo un error al iniciar sesión. Inténtalo de nuevo más tarde.');
+      console.error("Error al iniciar sesión:", error);
+      setError(
+        "Se produjo un error al iniciar sesión. Inténtalo de nuevo más tarde."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Container className={classes.container}>
-      <Typography variant="h5" gutterBottom>
-        Iniciar Sesión
-      </Typography>
-      <form className={classes.form} onSubmit={handleSubmit}>
-        <TextField
-          label="Correo Electrónico"
-          name="email"
-          value={credentials.email}
-          onChange={handleChange}
-          variant="outlined"
-          required
-        />
-        <TextField
-          label="Contraseña"
-          name="password"
-          value={credentials.password}
-          onChange={handleChange}
-          variant="outlined"
-          type="password"
-          required
-        />
-        <Button type="submit" variant="contained" color="primary" disabled={loading}>
-          {loading ? <CircularProgress size={24} /> : 'Iniciar Sesión'}
-        </Button>
-        {error && (
-          <Typography variant="body2" color="error">
-            {error}
-          </Typography>
-        )}
-      </form>
+    <Container className="flex items-center justify-center h-screen">
+      <Card className="p-8 md:p-12 shadow-md w-full md:w-3/4">
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <div variant="outlined" className="w-full">
+              <CardContent>
+                <div className="text-center">
+                  <Typography variant="h5" gutterBottom className="text-black">
+                    Iniciar Sesión
+                  </Typography>
+                </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <TextField
+                    label="Correo Electrónico"
+                    name="email"
+                    value={credentials.email}
+                    onChange={handleChange}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                  <TextField
+                    label="Contraseña"
+                    name="password"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    variant="outlined"
+                    type="password"
+                    required
+                    fullWidth
+                  />
+                  <Box>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disabled={loading}
+                      fullWidth
+                      className="bg-blue-500 text-white"
+                    >
+                      {loading ? (
+                        <CircularProgress size={24} />
+                      ) : (
+                        "Iniciar Sesión"
+                      )}
+                    </Button>
+                  </Box>
+                  {error && (
+                    <Typography
+                      variant="body2"
+                      color="error"
+                      className="text-red-500"
+                    >
+                      {error}
+                    </Typography>
+                  )}
+                </form>
+              </CardContent>
+            </div>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <div className="flex justify-center items-center h-full">
+              <Image
+                src="/images/foodie-login.jpg"
+                alt="Foodie"
+                width={500}
+                height={500}
+              />
+            </div>
+          </Grid>
+        </Grid>
+      </Card>
     </Container>
   );
 };

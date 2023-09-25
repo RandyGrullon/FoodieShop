@@ -1,33 +1,30 @@
-// api/auth.js
 import axios from 'axios';
 
 const API_URL = 'https://food-39rc-dev.fl0.io/api'; // Reemplaza con la URL de tu API
 
-const register = async (userData) => {
+const makeRequest = async (url, data, method = 'get') => {
   try {
-    const response = await axios.post(`${API_URL}/auth/register`, userData);
+    const response = await axios({
+      method,
+      url: `${API_URL}${url}`,
+      data,
+    });
     return response.data;
   } catch (error) {
     throw error;
   }
+};
+
+const register = async (userData) => {
+  return makeRequest('/auth/register', userData, 'post');
 };
 
 const login = async (credentials) => {
-  try {
-    const response = await axios.post(`${API_URL}/auth/login`, credentials);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return makeRequest('/auth/login', credentials, 'post');
 };
 
 const checkAuthStatus = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/auth/check_auth_status`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
+  return makeRequest('/auth/check_auth_status');
 };
 
 export default {

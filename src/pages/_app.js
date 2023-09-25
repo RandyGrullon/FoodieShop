@@ -1,13 +1,33 @@
-import { ThemeProvider } from '@emotion/react'; // Importa ThemeProvider de Emotion
-import CssBaseline from '@mui/material/CssBaseline'; // Importa CssBaseline de Material-UI
-import theme from '@/styles/theme'; // Importa tu tema de Material-UI
-import '../styles/globals.css'; // Importa tus estilos globales si los tienes
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { ThemeProvider } from "@mui/system";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider as EmotionThemeProvider } from "@emotion/react";
+import theme from "@/styles/theme";
+import "../styles/globals.css";
+import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("foodie-token");
+
+    if (token) {
+    } else {
+      router.push("/auth/login");
+    }
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Component {...pageProps} />
+      <EmotionThemeProvider theme={theme}>
+          <Navbar />
+        <Component {...pageProps} />
+          <Footer />
+      </EmotionThemeProvider>
     </ThemeProvider>
   );
 }
