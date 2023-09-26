@@ -1,40 +1,45 @@
-import axios from "axios";
+// src/api/products.js
 
-const API_URL = "https://food-39rc-dev.fl0.io/api"; // Reemplaza con la URL de tu API
+import axios from 'axios';
 
-const makeRequest = async (url, data, method = "get") => {
+const API_BASE_URL = 'https://food-39rc-dev.fl0.io'; // Reemplaza con la URL de tu API
+
+// Función para obtener todos los productos
+export const getAllProducts = async () => {
   try {
-    const response = await axios({
-      method,
-      url: `${API_URL}${url}`,
-      data,
-    });
+    const response = await axios.get(`${API_BASE_URL}/api/products`);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const createProduct = async (productData) => {
-  return makeRequest("/products", productData, "post");
-};
-
-export const getProducts = async () => {
-  return makeRequest("/products");
-};
-
+// Función para obtener un producto por su ID
 export const getProductById = async (productId) => {
-  return makeRequest(`/products/${productId}`);
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/products/${productId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const updateProduct = async (productId, productData) => {
-  return makeRequest(`/products/${productId}`, productData, "patch");
+// Función para actualizar un producto por su ID
+export const updateProductById = async (productId, updatedProductData) => {
+  try {
+    const response = await axios.patch(`${API_BASE_URL}/api/products/${productId}`, updatedProductData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const deleteProduct = async (productId) => {
-  return makeRequest(`/products/${productId}`, null, "delete");
-};
-
-export const seedProducts = async () => {
-  return makeRequest("/seed");
+// Función para eliminar un producto por su ID
+export const deleteProductById = async (productId) => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/api/products/${productId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };

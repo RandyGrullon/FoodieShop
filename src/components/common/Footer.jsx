@@ -1,28 +1,17 @@
+// src/components/common/Footer.js
+
 import React from "react";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import { IconButton } from "@mui/material";
 
 const Footer = () => {
   return (
-    <div className="bg-blue-600 py-4 text-white ">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-center items-center">
-          <p className="text-sm">
-            &copy; {new Date().getFullYear()} Foodie. Todos los derechos
-            reservados.
-          </p>
-          <a
-            href="https://github.com/tuusuario/turepositorio"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <IconButton className="text-white" aria-label="GitHub">
-              <GitHubIcon />
-            </IconButton>
-          </a>
-        </div>
+    <footer className="bg-gray-200 p-4 text-gray-700">
+      <div className="container mx-auto text-center">
+        <p>
+          &copy; {new Date().getFullYear()} FoodieShop. Todos los derechos
+          reservados.
+        </p>
       </div>
-    </div>
+    </footer>
   );
 };
 

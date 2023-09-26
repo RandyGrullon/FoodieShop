@@ -1,32 +1,35 @@
-import axios from "axios";
+// src/api/auth.js
 
-const API_URL = "https://food-39rc-dev.fl0.io/api"; // Reemplaza con la URL de tu API
+import axios from 'axios';
 
-const makeRequest = async (url, data, method = "get") => {
+const API_BASE_URL = 'https://food-39rc-dev.fl0.io'; // Reemplaza con la URL de tu API
+
+// Función para registrar un nuevo usuario
+export const registerUser = async (userData) => {
   try {
-    const response = await axios({
-      method,
-      url: `${API_URL}${url}`,
-      data,
-    });
+    const response = await axios.post(`${API_BASE_URL}/api/auth/register`, userData);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-const auth = {
-  register: async (userData) => {
-    return makeRequest("/auth/register", userData, "post");
-  },
-
-  login: async (credentials) => {
-    return makeRequest("/auth/login", credentials, "post");
-  },
-
-  checkAuthStatus: async () => {
-    return makeRequest("/auth/check_auth_status");
-  },
+// Función para iniciar sesión
+export const loginUser = async (credentials) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/auth/login`, credentials);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export default auth;
+// Función para verificar el estado de autenticación
+export const checkAuthStatus = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/auth/check_auth_status`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
