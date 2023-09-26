@@ -15,10 +15,6 @@ const Profile = ({ onEditProfile }) => {
     {}
   );
 
-  useEffect(() => {
-    const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
-    setUser(userFromLocalStorage);
-  }, []);
 
   const handleEditClick = () => {
     setIsEditModalOpen(true);

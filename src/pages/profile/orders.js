@@ -11,7 +11,6 @@ const UserOrders = ({ userId }) => {
   const classes = useStyles();
   const [userOrders, setUserOrders] = useState([]);
 
-  useEffect(() => {
     // Simulación de una solicitud a la API para obtener el historial de órdenes del usuario
     const fetchUserOrders = async () => {
       try {
@@ -30,7 +29,6 @@ const UserOrders = ({ userId }) => {
 
     // Llama a la función para obtener el historial de órdenes cuando se monta el componente
     fetchUserOrders();
-  }, [userId]);
 
   return (
     <Container className={classes.container}>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProductList from "../product/ProductList";
-import { getProducts } from "../../pages/api/products";
+import { getProducts } from "../../api/products";
 
 export default function Dashboard() {
   const [products, setProducts] = useState([]);
@@ -13,7 +13,9 @@ export default function Dashboard() {
       .catch((error) => {
         console.error("Error al obtener los productos:", error);
       });
-  }, []);
+  }, [
+    
+  ]);
 
 
   return (

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,18 +6,16 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"; // Importa el icono de carrito
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchBar from "../SearchBar";
+import { useRouter } from "next/router";
 
 const Navbar = ({ onSearch }) => {
+  const [user, setUser] = useState({});
   const router = useRouter();
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-  };
-
+  const handleLogout = () => {};
+  
   return (
     <AppBar position="static" className="bg-blue-600">
       <Toolbar className="flex justify-between items-center">
@@ -44,10 +41,10 @@ const Navbar = ({ onSearch }) => {
                 <span className="hidden sm:inline text-sm">Perfil</span>
               </IconButton>
             </Link>
-            <Link href="/cart"> {/* Agrega el enlace a la página de carrito */}
+            <Link href="/cart">
               <IconButton color="inherit" aria-label="Cart" className="mr-2">
-                <ShoppingCartIcon /> {/* Icono de carrito */}
-                <span className="hidden sm:inline text-sm">Cart</span> {/* Texto "Cart" */}
+                <ShoppingCartIcon />
+                <span className="hidden sm:inline text-sm">Cart</span>
               </IconButton>
             </Link>
             <IconButton
@@ -57,9 +54,8 @@ const Navbar = ({ onSearch }) => {
               onClick={handleLogout}
             >
               <ExitToAppIcon />
-              <Link href={`/auth/login`}>
-                <span className="hidden sm:inline text-sm">Salir</span>
-              </Link>
+              {/* Corrección: No es necesario usar Link aquí */}
+              <span className="hidden sm:inline text-sm">Salir</span>
             </IconButton>
           </div>
         )}

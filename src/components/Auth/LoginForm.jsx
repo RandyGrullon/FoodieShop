@@ -10,7 +10,7 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import authApi from "../../pages/api/auth";
+import authApi from "../../api/auth";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -23,22 +23,7 @@ const LoginForm = () => {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials({
-      ...credentials,
-      [name]: value,
-    });
-  };
-
-  //useEffect
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      router.push("/");
-    }
-  }, [router]);
-
+  const handleChange = () => {};
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -46,14 +31,16 @@ const LoginForm = () => {
     try {
       const { email, password } = credentials;
       const response = await authApi.login({ email, password });
-  
-      // Save user in localStorage
+
+      // Corrección: Guardar el usuario en localStorage
       if (response?.email) {
         const user = {
           ...response,
           token: response.token,
         };
         localStorage.setItem("user", JSON.stringify(user));
+
+        // Corrección: Redirigir al URL deseado después de iniciar sesión
         router.push("/"); // Cambia esto al URL deseado, por ejemplo, "/home"
       } else {
         setError("Credenciales incorrectas. Inténtalo de nuevo.");
@@ -67,9 +54,6 @@ const LoginForm = () => {
       setLoading(false);
     }
   };
-
-  
-
 
   return (
     <Container className="flex items-center justify-center h-screen">

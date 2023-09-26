@@ -7,6 +7,8 @@ const ProductListWrapper = styled('div')({
   flexGrow: 1,
 });
 
+
+
 const ProductList = ({ products, onAddToCart }) => {
   return (
     <ProductListWrapper>

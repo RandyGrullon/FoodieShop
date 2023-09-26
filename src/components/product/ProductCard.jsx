@@ -5,7 +5,7 @@ import Image from "next/image";
 const ProductCard = ({ product, onAddToCart }) => {
 
   return (
-    <div className="bg-white shadow-md p-4 rounded-lg">
+    <div className="bg-white shadow-md p-4 rounded-lg ">
       <Image
         src="/images/image.jpg" // Reemplaza con la URL de la imagen del producto
         alt={product.name}

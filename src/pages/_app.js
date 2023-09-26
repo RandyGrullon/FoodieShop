@@ -13,14 +13,17 @@ function MyApp({ Component, pageProps }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
-    if (!userFromLocalStorage) {
-      // Si el usuario no está autenticado, redirige a la página de autenticación
-      router.push("/auth/login");
-    } else {
-      setUser(userFromLocalStorage);
+    if (typeof window !== "undefined") {
+      const userFromLocalStorage = JSON.parse(localStorage.getItem("user"));
+      if (!userFromLocalStorage) {
+        // Si el usuario no está autenticado, redirige a la página de autenticación
+        router.push("/auth/login");
+      } else {
+        setUser(userFromLocalStorage);
+      }
     }
   }, [router]); // Ejecuta esto una vez al cargar la aplicación en el cliente
+  
 
   return (
     <ThemeProvider theme={theme}>
