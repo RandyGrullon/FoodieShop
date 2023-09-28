@@ -1,39 +1,59 @@
-import React, { useState } from 'react';
-import AdminMenuForm from '../components/admin/adminMenuForm'; // Importa el formulario de Menú
-import AdminProductForm from '../components/admin/adminProductForm'; // Importa el formulario de Producto
+import React, { useState } from "react";
+import AdminMenuForm from "../components/admin/adminMenuForm";
+import AdminProductForm from "../components/admin/adminProductForm";
 
 const AdminDashboard = () => {
-  const [selectedTab, setSelectedTab] = useState('menu'); // Estado para controlar la pestaña seleccionada
+  const [selectedTab, setSelectedTab] = useState("menu");
+
+  const handleTabClick = (tab) => {
+    setSelectedTab(tab);
+  };
 
   return (
-    <div className="flex justify-center items-center h-screen ">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-2/5  text-black">
-        <div className="flex mb-4">
-          <button
-            className={`px-4 py-2 rounded-full ${
-              selectedTab === 'menu' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-600'
-            }`}
-            onClick={() => setSelectedTab('menu')}
+    <div className="flex justify-center items-center h-screen">
+      <div className="bg-white pb-8  rounded-lg shadow-lg w-2/5 text-black">
+        <div className="flex w-full justify-center">
+          <TabButton
+            tab="menu"
+            selectedTab={selectedTab}
+            onClick={handleTabClick}
           >
             Menú
-          </button>
-          <button
-            className={`px-4 py-2 ml-4 rounded-full ${
-              selectedTab === 'product' ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'
-            }`}
-            onClick={() => setSelectedTab('product')}
+          </TabButton>
+          <TabButton
+            tab="product"
+            selectedTab={selectedTab}
+            onClick={handleTabClick}
           >
             Producto
-          </button>
+          </TabButton>
         </div>
-        {selectedTab === 'menu' ? (
-          <AdminMenuForm onSubmit={(newMenu) => handleMenuSubmit(newMenu)} />
+        <div className="px-8 py-4">
+
+        {selectedTab === "menu" ? (
+            <AdminMenuForm onSubmit={(newMenu) => handleMenuSubmit(newMenu)} />
         ) : (
-          <AdminProductForm onSubmit={(newProduct) => handleProductSubmit(newProduct)} />
-        )}
+            <AdminProductForm
+            onSubmit={(newProduct) => handleProductSubmit(newProduct)}
+            />
+            )}
+            </div>
       </div>
     </div>
   );
 };
+
+const TabButton = ({ tab, selectedTab, onClick, children }) => (
+  <button
+    className={`flex-grow p-4 ${
+      selectedTab === tab
+        ? "bg-blue-500 text-white"
+        : "bg-gray-300 text-gray-600"
+    }`}
+    onClick={() => onClick(tab)}
+  >
+    {children}
+  </button>
+);
 
 export default AdminDashboard;

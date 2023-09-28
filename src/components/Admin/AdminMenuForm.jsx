@@ -31,7 +31,7 @@ const AdminMenuForm = ({ onSubmit }) => {
 
   return (
     <div className='min-w-40'>
-      <h2 className="text-2xl font-semibold">Formulario de Menú</h2>
+      <h2 className="text-2xl font-semibold">Formlario de Menú</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="menuName" className="block text-gray-600">Nombre del Menú</label>
@@ -54,19 +54,23 @@ const AdminMenuForm = ({ onSubmit }) => {
         </div>
         <div className="mb-4 text-black ">
           <label className="block text-gray-600">Item del Menú</label>
-          { menuItems.map((item, index) => (
-            <div key={index} className="flex items-center">
-              hola
-              <div className='border-2'></div>
-              <button
-                type="button"
-                onClick={() => handleDeleteItem(index)}
-                className="ml-2 p-2 text-red-600 hover:text-red-700"
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-            </div>
-          ))}
+            {menuItems.map((item, index) => (
+                <div key={index} className="flex items-center">
+                <input
+                    type="text"
+                    value={item}
+                    onChange={(e) => handleItemChange(index, e.target.value)}
+                    className="border border-gray-300 rounded-md p-2 w-full"
+                />
+                <button
+                    type="button"
+                    onClick={() => handleDeleteItem(index)}
+                    className="bg-red-500 text-white py-2 px-4 rounded-full hover:bg-red-600 ml-2"
+                >
+                    <FontAwesomeIcon icon={faTrash} />
+                </button>
+                </div>
+            ))}
           <button
             type="button"
             onClick={() => setMenuItems([...menuItems, ''])}
