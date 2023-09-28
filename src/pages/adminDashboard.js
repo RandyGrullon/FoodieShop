@@ -1,59 +1,44 @@
 import React, { useState } from "react";
-import AdminMenuForm from "../components/admin/adminMenuForm";
-import AdminProductForm from "../components/admin/adminProductForm";
+import AdminMenuForm from "@/components/Admin/AdminMenuForm";
+import AdminFoodForm from "@/components/Admin/AdminFoodForm";
 
 const AdminDashboard = () => {
-  const [selectedTab, setSelectedTab] = useState("menu");
+  const [activeTab, setActiveTab] = useState("menu"); // Estado para rastrear la pestaña activa
 
-  const handleTabClick = (tab) => {
-    setSelectedTab(tab);
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white pb-8  rounded-lg shadow-lg w-2/5 text-black">
-        <div className="flex w-full justify-center">
-          <TabButton
-            tab="menu"
-            selectedTab={selectedTab}
-            onClick={handleTabClick}
-          >
-            Menú
-          </TabButton>
-          <TabButton
-            tab="product"
-            selectedTab={selectedTab}
-            onClick={handleTabClick}
-          >
-            Producto
-          </TabButton>
-        </div>
-        <div className="px-8 py-4">
-
-        {selectedTab === "menu" ? (
-            <AdminMenuForm onSubmit={(newMenu) => handleMenuSubmit(newMenu)} />
-        ) : (
-            <AdminProductForm
-            onSubmit={(newProduct) => handleProductSubmit(newProduct)}
-            />
-            )}
-            </div>
+    <div className="p-4">
+      <div className="flex justify-center pt-10">
+        <button
+          className={`px-4 py- ${
+            activeTab === "menu"
+              ? "bg-sky-100 rounded-tl-md  duration-500"
+              : "bg-gray-200  rounded-tl-md duration-500"
+          }`}
+          onClick={() => handleTabChange("menu")}
+        >
+          Menú
+        </button>
+        <button
+          className={`px-4 py-2 ${
+            activeTab === "Food"
+              ? "bg-sky-100 rounded-tr-md duration-500 "
+              : "bg-gray-200  rounded-tr-md shadow-r-lg duration-500"
+          }`}
+          onClick={() => handleTabChange("Food")}
+        >
+          Comida
+        </button>
+      </div>
+      <div className="">
+        {activeTab === "menu" ? <AdminMenuForm /> : null}
+        {activeTab === "Food" ? <AdminFoodForm /> : null}
       </div>
     </div>
   );
 };
-
-const TabButton = ({ tab, selectedTab, onClick, children }) => (
-  <button
-    className={`flex-grow p-4 ${
-      selectedTab === tab
-        ? "bg-blue-500 text-white"
-        : "bg-gray-300 text-gray-600"
-    }`}
-    onClick={() => onClick(tab)}
-  >
-    {children}
-  </button>
-);
 
 export default AdminDashboard;

@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../components/common/Layout";
-import UserProfile from "@/components/user/UserProfile";
 import api from "../api/auth"; // Importa las funciones de autenticación desde utils/api
 
+const UserDataInfo = {
+  
+    "id": 1,
+    "username": "admin",
+    "email": "",
+    "first_name": "Admin",
+
+  
+}
+
 const UserProfilePage = () => {
-  const [user, setUser] = useState(null); // Estado para almacenar los detalles del usuario
+  const [user, setUser] = useState(UserDataInfo); // Estado para almacenar los detalles del usuario
 
   useEffect(() => {
     // Llama a la API para obtener los detalles del usuario al cargar la página
@@ -21,15 +29,20 @@ const UserProfilePage = () => {
   }, []);
 
   return (
-    <Layout>
+    <div className="bg-white p-4">
       {user ? (
-      <UserProfile />
+        <div className="p-4 border-2 border-gray-500">
+          {/* <UserProfile 
+            user={user} 
+            onSubmit={(newUser) => handleUserSubmit(newUser)}
+          /> */}
+        </div>
       ) : (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto p-4 border-2 border-gray-500 text-center">
           <p className="text-red-500">Error al cargar el perfil del usuario.</p>
         </div>
       )}
-    </Layout>
+    </div>
   );
 };
 

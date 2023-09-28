@@ -1,92 +1,52 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import React from "react";
 
 const AdminMenuForm = ({ onSubmit }) => {
-  const [menuName, setMenuName] = useState('');
-  const [menuDescription, setMenuDescription] = useState('');
-  const [menuItems, setMenuItems] = useState([]);
-
-  const handleItemChange = (index, value) => {
-    const updatedItems = [...menuItems];
-    updatedItems[index] = value;
-    setMenuItems(updatedItems);
-  };
-
-  const handleDeleteItem = (indexToDelete) => {
-    const updatedItems = menuItems.filter((_, index) => index !== indexToDelete);
-    setMenuItems(updatedItems);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newMenu = {
-      name: menuName,
-      description: menuDescription,
-      items: menuItems,
-    };
-    onSubmit(newMenu);
-    // Lógica para enviar el nuevo menú al servidor o API aquí
-  };
-
   return (
-    <div className='min-w-40'>
-      <h2 className="text-2xl font-semibold">Formlario de Menú</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="menuName" className="block text-gray-600">Nombre del Menú</label>
-          <input
-            type="text"
-            id="menuName"
-            value={menuName}
-            onChange={(e) => setMenuName(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full"
-          />
+    <section
+      id="login"
+      className=" flex flex-col justify-center max-w-md mx-auto rounde-md"
+    >
+      <div className="p-6 bg-sky-100 rounded">
+        <div className="flex items-center justify-center font-black m-3 mb-12">
+         
+          <h1 className="tracking-wide text-3xl text-gray-900 text-center">
+            Formulario creacion Menu
+          </h1>
         </div>
-        <div className="mb-4">
-          <label htmlFor="menuDescription" className="block text-gray-600">Descripción del Menú</label>
-          <textarea
-            id="menuDescription"
-            value={menuDescription}
-            onChange={(e) => setMenuDescription(e.target.value)}
-            className="border border-gray-300 rounded-md p-2 w-full h-40"
-          />
-        </div>
-        <div className="mb-4 text-black ">
-          <label className="block text-gray-600">Item del Menú</label>
-            {menuItems.map((item, index) => (
-                <div key={index} className="flex items-center">
-                <input
-                    type="text"
-                    value={item}
-                    onChange={(e) => handleItemChange(index, e.target.value)}
-                    className="border border-gray-300 rounded-md p-2 w-full"
-                />
-                <button
-                    type="button"
-                    onClick={() => handleDeleteItem(index)}
-                    className="bg-red-500 text-white py-2 px-4 rounded-full hover:bg-red-600 ml-2"
-                >
-                    <FontAwesomeIcon icon={faTrash} />
-                </button>
-                </div>
-            ))}
-          <button
-            type="button"
-            onClick={() => setMenuItems([...menuItems, ''])}
-            className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600"
-          >
-            Agregar Item
-          </button>
-        </div>
-        <button
-          type="submit"
-          className="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600"
+        <form
+          id="login_form"
+          method="POST"
+          className="flex flex-col justify-center"
         >
-          Crear Menú
-        </button>
-      </form>
-    </div>
+          <label className="text-sm font-medium">Nombre del menu</label>
+          <input
+            className=" 
+        mb-3 mt-1 block w-full px-2 py-1.5 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400focus:outline-none focus:border-sky-500  focus:ring-1 focus:ring-sky-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
+            type="text"
+            name="username"
+            placeholder="wahyusa"
+          />
+          <label className="text-sm font-medium">Description</label>
+          <textarea
+            className="
+        mb-3 mt-1 block w-full px-2 py-1.5 border border-gray-300 rounded-md text-sm shadow-sm placeholder-gray-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
+            name="messages"
+            placeholder="Write something"
+          ></textarea>
+          <button
+            className="px-4 py-1.5 rounded-md shadow-lg bg-orange-500 text-gray-100 block transition duration-300"
+            type="submit"
+          >
+            <span id="login_process_state" className="hidden">
+              Sending :)
+            </span>
+            <span id="login_default_state">
+              Crear<span id="subtotal"></span>
+            </span>
+          </button>
+        </form>
+      </div>
+    </section>
   );
 };
 
