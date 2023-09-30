@@ -1,22 +1,32 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";  // Importa useDispatch y useSelector
 import LoginForm from "@/components/user/LoginForm";
-import { loginUser } from "../api/auth"; // Importa la función loginUser desde tu API de autenticación
-import { useAuth } from "../context/AuthContext"; // Importa useAuth desde tu contexto de autenticación
+import { useAuth } from "@/context/AuthContext";
 
-const LoginPage = ({ handleLogin }) => {
+const LoginPage = () => {  // Eliminado handleLoginRedux
   const router = useRouter();
-  const { isAuthenticated } = useAuth(); // Obtén el estado de autenticación del contexto
+  const dispatch = useDispatch();  // Utiliza useDispatch
+  const {isAuthenticated, login} = useAuth(); // Utiliza useSelector para acceder al estado de autenticación
 
-  // Verificar si el usuario ya está autenticado al cargar la página
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (isAuthenticated || storedUser) {
-      // Si estás autenticado en el contexto o tienes información de usuario en localStorage, redirige a la página de inicio
-      router.push("/");
+    // Eliminado el manejo del localStorage
+    if (isAuthenticated) {
+      router.push("/");  // Redirige al inicio si el usuario ya está autenticado
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, router]);
+
+  const handleLogin = async (credentials) => {
+    try {
+      const userData = await login(credentials);
+      dispatch({ type: "LOGIN", payload: userData });  // Utiliza dispatch aquí
+
+      // Eliminado el manejo del localStorage
+      router.push("/");  // Redirige al inicio
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex justify-center bg-gray-300">
@@ -25,22 +35,7 @@ const LoginPage = ({ handleLogin }) => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+// Eliminadas las funciones mapStateToProps y mapDispatchToProps
+// porque estamos usando useSelector y useDispatch de Redux
 
-const mapDispatchToProps = (dispatch) => ({
-  handleLogin: async (credentials) => {
-    try {
-      const userData = await loginUser(credentials); // Utiliza el método de autenticación loginUser
-      // Actualiza el estado de autenticación en Redux
-      dispatch({ type: "LOGIN", payload: userData });
-
-      // Guarda la información de sesión en localStorage
-      localStorage.setItem("user", JSON.stringify(userData));
-    } catch (error) {
-      console.error("Login error:", error);
-      // Maneja el error de autenticación aquí
-    }
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default LoginPage;

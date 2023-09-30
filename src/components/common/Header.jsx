@@ -1,15 +1,27 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faSignOutAlt,
+  faShoppingCart,
+} from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useCart } from "@/context/CartContext";
 
 const Header = ({ toggleSidebar }) => {
   const { isAuthenticated, user, logout } = useAuth();
+  const { cart } = useCart();
+
   const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
   const [isLoadingSignOut, setIsLoadingSignOut] = useState(false); // Nuevo estado para carga
   const router = useRouter();
+
+  const totalItems = Object.values(cart).reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  );
 
   console.log("user", user);
 
@@ -28,12 +40,8 @@ const Header = ({ toggleSidebar }) => {
       // Cierra el menú de perfil después de cerrar sesión
       setProfileMenuOpen(false);
 
-      //timout loading
-      setTimeout(() => {
-        router.push("/");
-      }, 2000);
-
-      // Redirige a la página de inicio
+      // Redirige a la página de inicio de sesión
+      router.push("/login"); // <--- Añade esta línea para redirigir al usuario al login
     } catch (error) {
       console.error("Sign Out error:", error);
     } finally {
@@ -65,37 +73,53 @@ const Header = ({ toggleSidebar }) => {
       >
         Foodie
       </Link>
+
       <nav
         className={
           "flex-col flex-grow pb-4 md:pb-0 hidden md:flex md:justify-end md:flex-row "
         }
       >
-        {!user ? (
-          <div className="relative">
-            <button
-              onClick={toggleProfileMenu}
-              className="text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
-            >
-              <FontAwesomeIcon icon={faUser} />
-              Profile
-            </button>
-            {isProfileMenuOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg">
-                <ul className="py-2 px-3">
-                  <li>
-                    <button
-                      onClick={handleSignOut}
-                      className="block py-2 text-gray-900 hover:bg-gray-200 hover:text-gray-700 w-full text-left"
-                      disabled={isLoadingSignOut} // Desactiva el botón cuando está cargando
-                    >
-                      <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
-                      {isLoadingSignOut ? "Signing Out..." : "Sign Out"}{" "}
-                      {/* Cambia el texto del botón durante la carga */}
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            )}
+        {user ? (
+          <div className="flex  gap-4">
+            <div className="relative">
+              <button
+                onClick={toggleProfileMenu}
+                className="text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+              >
+                <FontAwesomeIcon icon={faUser} />
+                Profile
+              </button>
+              {isProfileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg">
+                  <ul className="py-2 px-3">
+                    <li>
+                      <button
+                        onClick={handleSignOut}
+                        className="block py-2 text-gray-900 hover:bg-gray-200 hover:text-gray-700 w-full text-left"
+                        disabled={isLoadingSignOut} // Desactiva el botón cuando está cargando
+                      >
+                        <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
+                        {isLoadingSignOut ? "Signing Out..." : "Sign Out"}{" "}
+                        {/* Cambia el texto del botón durante la carga */}
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+            <Link href="/cart" className="flex items-center">
+              <FontAwesomeIcon
+                icon={faShoppingCart}
+                className="text-gray-800"
+              />
+              (
+              {totalItems > 0 && (
+                <span className="ml-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+              )
+            </Link>
           </div>
         ) : (
           <Link

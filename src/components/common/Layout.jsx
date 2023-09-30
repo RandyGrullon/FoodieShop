@@ -1,12 +1,10 @@
-// components/Layout.js
-
 import React, { useState } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import Header from "./Header";
 import PropTypes from "prop-types";
 
 const Layout = ({ children, pageProps }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -17,7 +15,9 @@ const Layout = ({ children, pageProps }) => {
 
   return (
     <div className={`flex w-full ${noLayout ? "" : "bg-gray-100"}`}>
-      {!noLayout && <Sidebar sidebarOpen={sidebarOpen} />}
+      {!noLayout && (
+        <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      )}
       <div className="flex flex-col w-[100%]">
         {!noLayout && <Header toggleSidebar={toggleSidebar} />}
         {children}

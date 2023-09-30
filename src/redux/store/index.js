@@ -1,16 +1,14 @@
-import { combineReducers } from "redux";
-import { configureStore } from "@reduxjs/toolkit";
-import { Provider } from "react-redux";
-import authReducer from "../reducers/authReducer";
-import cartReducer from "../reducers/cartReducer";
+// src/redux/store/index.js
+
+import { createStore, combineReducers } from 'redux';
+import authReducer from '../reducers/authReducer';
+import cartReducer from '../reducers/cartReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
   cart: cartReducer,
 });
 
-const store = configureStore({
-  reducer: rootReducer,
-});
+const store = createStore(rootReducer);
 
 export default store;

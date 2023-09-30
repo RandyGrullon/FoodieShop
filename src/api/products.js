@@ -43,3 +43,17 @@ export const deleteProductById = async (productId) => {
     throw error;
   }
 };
+
+// Función para crear un producto
+export const createProduct = async (productData) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/api/products`, productData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Función para obtener todas las categorías
+
+

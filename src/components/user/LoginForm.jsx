@@ -1,27 +1,31 @@
-import React, { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+ // Asegúrate de importar useAuth desde la ubicación correcta
 
-const LoginForm = ({ handleLogin }) => {
+const LoginForm = ({handleLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login, isAuthenticated } = useAuth();
+  const router = useRouter()
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  const credentials = {email, password}
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Crea un objeto con las credenciales del usuario
-    const credentials = { email, password };
-
-    // Llama a la función de inicio de sesión proporcionada por props
+    // Llama al método login del contexto de autenticación
     handleLogin(credentials);
   };
 
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/");  // Redirige al inicio
+    }
+  }, [isAuthenticated]); 
   return (
     <div className="min-h-screen flex flex-col items-center  py-10 bg-gray-300">
       <div className="flex flex-col bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">

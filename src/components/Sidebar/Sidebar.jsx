@@ -1,46 +1,113 @@
+import { useAuth } from "@/context/AuthContext";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
-const Sidebar = ({ sidebarOpen }) => {
+const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
+  const { user, isLoading, logout } = useAuth();
+  const [isLoadingSignOut, setIsLoadingSignOut] = useState(false); // Nuevo estado para carga
+
+  if (isLoading) {
+    console.log("Cargando...");
+  } else if (user) {
+    console.log("Usuario:", user);
+  } else {
+    console.log("No autenticado");
+  }
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Sign Out error:", error);
+    }
+  };
+
   return (
     <div
-      className={`flex overflow-x-hidden h-screen bg-gray-800 text-white ${
-        sidebarOpen ? "duration-500" : "-ml-64 duration-500"
-      }`}
+      className={`flex overflow-x-hidden h-screen bg-gray-800 text-white 
+                sm:fixed md:relative lg:relative
+                ${
+                  sidebarOpen ? "duration-500 " : "-ml-64 duration-500 "
+                }z-50 fixed`}
     >
       <aside className="w-64 flex flex-col ">
-        <div className="h-20 bg-gray-800 flex justify-center items-center ">
-          <Link
-            href="/"
-            className="text-lg cursor-pointer font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline"
-          >
+        <div className="h-20 bg-gray-800 flex justify-between items-center p-4">
+          <Link href="/">
             <Image src="/images/logo.png" alt="logo" width={50} height={50} />
           </Link>
+          {/* Close button for mobile */}
+          <button
+            onClick={toggleSidebar}
+            className="sm:block md:hidden lg:hidden"
+          >
+            X
+          </button>
         </div>
         <nav
-          className={`flex-1 flex flex-col flex-grow py-4 gap-10   ${
+          className={`flex-1 flex flex-col flex-grow py-4 px-2 gap-10 ${
             sidebarOpen ? "flex" : "hidden"
           }`}
         >
           <Link
-            className="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+            onClick={toggleSidebar} // Aquí
+            className="..."
             href="/"
           >
             Home
           </Link>
-          {/* menu */}
           <Link
-            className="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
+            onClick={toggleSidebar} // Aquí
+            className="..."
             href="/menu"
           >
             Menu
           </Link>
           <Link
-            className="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
-            href="/adminDashboard"
+            onClick={toggleSidebar} // Aquí
+            className="..."
+            href="/order"
           >
-            Admin Creator
+            Order
           </Link>
+          <Link
+            onClick={toggleSidebar} // Aquí
+            className="..."
+            href="/cart"
+          >
+            Cart
+          </Link>
+          {user ? (
+            <>
+              <Link
+                onClick={toggleSidebar} // Aquí
+                className="..."
+                href="/profile"
+              >
+                Profile
+              </Link>
+              {/* red sign out button */}
+              <button
+                onClick={handleSignOut}
+                className="block text-center text-black rounded-md bg-red-200  w-full py-2 hover:bg-red-500 hover:text-white duration-300"
+                disabled={isLoadingSignOut} // Desactiva el botón cuando está cargando
+              >
+                <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
+                {isLoadingSignOut ? "Signing Out..." : "Sign Out"}{" "}
+                {/* Cambia el texto del botón durante la carga */}
+              </button>
+            </>
+          ) : (
+            <Link
+              onClick={toggleSidebar} // Aquí
+              className="..."
+              href="/login"
+            >
+              Login
+            </Link>
+          )}
         </nav>
       </aside>
     </div>
