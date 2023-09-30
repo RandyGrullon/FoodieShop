@@ -4,25 +4,23 @@ import { useDispatch } from "react-redux";  // Importa useDispatch y useSelector
 import LoginForm from "@/components/user/LoginForm";
 import { useAuth } from "@/context/AuthContext";
 
-const LoginPage = () => {  // Eliminado handleLoginRedux
+const LoginPage = () => {  
   const router = useRouter();
-  const dispatch = useDispatch();  // Utiliza useDispatch
-  const {isAuthenticated, login} = useAuth(); // Utiliza useSelector para acceder al estado de autenticación
+  const dispatch = useDispatch();  
+  const {isAuthenticated, login} = useAuth(); 
 
   useEffect(() => {
-    // Eliminado el manejo del localStorage
     if (isAuthenticated) {
-      router.push("/");  // Redirige al inicio si el usuario ya está autenticado
+      router.push("/"); 
     }
   }, [isAuthenticated, router]);
 
   const handleLogin = async (credentials) => {
     try {
       const userData = await login(credentials);
-      dispatch({ type: "LOGIN", payload: userData });  // Utiliza dispatch aquí
+      dispatch({ type: "LOGIN", payload: userData });
 
-      // Eliminado el manejo del localStorage
-      router.push("/");  // Redirige al inicio
+      router.push("/"); 
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -35,7 +33,5 @@ const LoginPage = () => {  // Eliminado handleLoginRedux
   );
 };
 
-// Eliminadas las funciones mapStateToProps y mapDispatchToProps
-// porque estamos usando useSelector y useDispatch de Redux
 
 export default LoginPage;
