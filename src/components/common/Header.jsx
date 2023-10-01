@@ -23,7 +23,6 @@ const Header = ({ toggleSidebar }) => {
     0
   );
 
-  console.log("user", user);
 
   const toggleProfileMenu = () => {
     setProfileMenuOpen(!isProfileMenuOpen);

@@ -6,16 +6,10 @@ import Link from "next/link";
 import { useState } from "react";
 
 const Sidebar = ({ sidebarOpen, toggleSidebar }) => {
-  const { user, isLoading, logout } = useAuth();
+  const { user, logout } = useAuth();
   const [isLoadingSignOut, setIsLoadingSignOut] = useState(false); // Nuevo estado para carga
+  // console.log(user);
 
-  if (isLoading) {
-    console.log("Cargando...");
-  } else if (user) {
-    console.log("Usuario:", user);
-  } else {
-    console.log("No autenticado");
-  }
 
   const handleSignOut = async () => {
     try {

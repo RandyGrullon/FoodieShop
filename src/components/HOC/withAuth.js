@@ -1,18 +1,23 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useAuth } from "@/context/AuthContext";
 
 const withAuth = (WrappedComponent) => {
   return (props) => {
-    const Router = useRouter();
-    const userIsAuthenticated = false; // Aquí debería ir tu lógica de autenticación
+    const router = useRouter();
+    const { user } = useAuth();
+
+    const checkAuthentication = () => {
+      if (!user) {
+        router.push("/login");
+      }
+    };
 
     useEffect(() => {
-      if (!userIsAuthenticated) {
-        Router.replace('/login');
-      }
-    }, [userIsAuthenticated]);
+      checkAuthentication();
+    }, [user]);
 
-    return <WrappedComponent {...props} />;
+    return <WrappedComponent user={user} {...props} />;
   };
 };
 

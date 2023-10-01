@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { checkAuthStatus, loginUser } from "../api/auth";
 
 const AuthContext = createContext({
-  user: null,
+  user: {},
   login: () => {},
   logout: () => {},
   isLoading: true,
@@ -14,10 +14,27 @@ export function AuthProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
+  // Cargar el usuario desde localStorage cuando el componente se monta
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Guardar el usuario en localStorage cada vez que cambie
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
+
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        const token = null;  // Aquí deberías obtener el token de donde lo tengas almacenado
+        const token = null; // Aquí deberías obtener el token de donde lo tengas almacenado
         if (token) {
           const userData = await checkAuthStatus(token);
           setUser(userData);
