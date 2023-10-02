@@ -1,6 +1,6 @@
 // src/pages/menu.js
 import React, { useState, useEffect } from 'react';
-import Layout from '@/components/common/Layout';
+import Layout from '@/components/Layout/Layout';
 import FoodMenu from '@/components/menu/FoodMenu';
 import { getAllProducts } from '@/api/products';  // Import the function
 

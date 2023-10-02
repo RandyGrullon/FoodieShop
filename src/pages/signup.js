@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Layout from '../components/common/Layout';
+import Layout from '../components/Layout/Layout';
 
 const Signup = () => {
   const [firstName, setFirstName] = useState('');

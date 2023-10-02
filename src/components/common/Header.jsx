@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -7,56 +6,36 @@ import {
   faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "../hooks/useAuth";
 
-const Header = ({ toggleSidebar }) => {
-  const { isAuthenticated, user, logout } = useAuth();
+const Header = ({ toggleSidebar, handleSignOut }) => {
+  const auth= useAuth();
+  console.log('====================================');
+  console.log("auth", auth);
+  console.log('====================================');
   const { cart } = useCart();
 
   const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
   const [isLoadingSignOut, setIsLoadingSignOut] = useState(false); // Nuevo estado para carga
-  const router = useRouter();
 
   const totalItems = Object.values(cart).reduce(
     (acc, item) => acc + item.quantity,
     0
   );
 
-
   const toggleProfileMenu = () => {
     setProfileMenuOpen(!isProfileMenuOpen);
   };
 
-  const handleSignOut = async () => {
-    // Activar la carga
-    setIsLoadingSignOut(true);
-
-    try {
-      // Realiza la acción de cierre de sesión
-      await logout();
-
-      // Cierra el menú de perfil después de cerrar sesión
-      setProfileMenuOpen(false);
-
-      // Redirige a la página de inicio de sesión
-      router.push("/login"); // <--- Añade esta línea para redirigir al usuario al login
-    } catch (error) {
-      console.error("Sign Out error:", error);
-    } finally {
-      // Desactivar la carga, independientemente de si fue exitoso o no
-      setIsLoadingSignOut(false);
-    }
-  };
-
   return (
-    <div className="bg-gray-300 h-20 flex justify-between items-center px-8 border-2 border-b-black">
+    <div className="bg-gray-800 h-20 flex justify-between items-center px-8 border-2 border-b-gray-700 border-t-transparent border-x-transparent">
       <button className="p-1 mr-4 cursor-pointer" onClick={toggleSidebar}>
         <svg
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          className="h-6 w-6"
+          className="h-6 w-6 text-white"
         >
           <path
             strokeLinecap="round"
@@ -68,7 +47,7 @@ const Header = ({ toggleSidebar }) => {
       </button>
       <Link
         href="/"
-        className="text-lg cursor-pointer font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline"
+        className="text-lg cursor-pointer font-semibold tracking-widest text-white uppercase rounded-lg dark-mode:text-white focus:outline-none focus:shadow-outline"
       >
         Foodie
       </Link>
@@ -78,7 +57,7 @@ const Header = ({ toggleSidebar }) => {
           "flex-col flex-grow pb-4 md:pb-0 hidden md:flex md:justify-end md:flex-row "
         }
       >
-        {user ? (
+        {auth.user && (
           <div className="flex  gap-4">
             <div className="relative">
               <button
@@ -120,13 +99,6 @@ const Header = ({ toggleSidebar }) => {
               )
             </Link>
           </div>
-        ) : (
-          <Link
-            href="/login"
-            className="px-4 py-2 mt-2 text-sm font-semibold bg-transparent rounded-lg dark-mode:bg-transparent dark-mode:hover:bg-gray-600 dark-mode:focus:bg-gray-600 dark-mode:focus:text-white dark-mode:hover:text-white dark-mode:text-gray-200 md:mt-0 md:ml-4 hover:text-gray-900 focus:text-gray-900 hover:bg-gray-200 focus:bg-gray-200 focus:outline-none focus:shadow-outline"
-          >
-            Login
-          </Link>
         )}
       </nav>
     </div>

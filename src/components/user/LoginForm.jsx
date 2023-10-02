@@ -1,44 +1,36 @@
-import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
- // Asegúrate de importar useAuth desde la ubicación correcta
+import Link from "next/link";
+import React, { useState } from "react";
 
-const LoginForm = ({handleLogin }) => {
+const LoginForm = ({ handleLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, isAuthenticated } = useAuth();
-  const router = useRouter()
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const credentials = {email, password}
+  const credentials = { email, password };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Llama al método login del contexto de autenticación
     handleLogin(credentials);
+    console.log('====================================');
+    console.log(credentials);
+    console.log('====================================');
   };
 
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");  // Redirige al inicio
-    }
-  }, [isAuthenticated]); 
   return (
-    <div className="min-h-screen flex flex-col items-center  py-10 bg-gray-300">
-      <div className="flex flex-col bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
-        <div className="font-medium self-center text-xl sm:text-2xl uppercase text-gray-800">
+    <div className="min-h-screen flex flex-col items-center h-screen w-full bg-gray-900 ">
+      <div className="flex flex-col px-10 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
+        <div className="font-medium self-center text-xl sm:text-2xl uppercase text-white">
           Login To Your Account
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 ">
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-6">
               <label
                 htmlFor="email"
-                className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
+                className="mb-1 text-xs sm:text-sm tracking-wide text-white"
               >
                 E-Mail Address:
               </label>
@@ -71,7 +63,7 @@ const LoginForm = ({handleLogin }) => {
             <div className="flex flex-col mb-6">
               <label
                 htmlFor="password"
-                className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
+                className="mb-1 text-xs sm:text-sm tracking-wide text-white"
               >
                 Password:
               </label>
@@ -128,9 +120,8 @@ const LoginForm = ({handleLogin }) => {
           </form>
         </div>
         <div className="flex justify-center items-center mt-6">
-          <a
-            href="#"
-            target="_blank"
+          <Link
+            href="/register"
             className="inline-flex items-center font-bold text-blue-500 hover:text-blue-700 text-xs text-center"
           >
             <span>
@@ -146,8 +137,8 @@ const LoginForm = ({handleLogin }) => {
                 <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
               </svg>
             </span>
-            <span className="ml-2">You don't have an account?</span>
-          </a>
+            <span className="ml-2">{"You don't have an account?"}</span>
+          </Link>
         </div>
       </div>
     </div>

@@ -1,26 +1,22 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useDispatch } from "react-redux";  // Importa useDispatch y useSelector
+import { useDispatch } from "react-redux"; // Importa useDispatch y useSelector
 import LoginForm from "@/components/user/LoginForm";
-import { useAuth } from "@/context/AuthContext";
+import BlankLayout from "@/components/user/auth/AclGuard";
+import { useAuth } from "@/components/hooks/useAuth";
 
-const LoginPage = () => {  
+const LoginPage = () => {
   const router = useRouter();
-  const dispatch = useDispatch();  
-  const {isAuthenticated, login} = useAuth(); 
+  const dispatch = useDispatch();
+  const auth  = useAuth();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/"); 
-    }
-  }, [isAuthenticated, router]);
 
   const handleLogin = async (credentials) => {
     try {
-      const userData = await login(credentials);
+      const userData = await auth.login(credentials);
       dispatch({ type: "LOGIN", payload: userData });
 
-      router.push("/"); 
+      router.push("/");
     } catch (error) {
       console.error("Login error:", error);
     }
@@ -33,5 +29,7 @@ const LoginPage = () => {
   );
 };
 
+LoginPage.getLayout = page => <BlankLayout>{page}</BlankLayout>
+LoginPage.guestGuard = true
 
 export default LoginPage;

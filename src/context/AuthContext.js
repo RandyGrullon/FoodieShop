@@ -1,83 +1,87 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { checkAuthStatus, loginUser } from "../api/auth";
+import React, { createContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import authConfig from "../configs/auth" // Asegúrate de que esta ruta sea correcta
+import { useDispatch } from 'react-redux';
+import { loginUser, checkAuthStatus } from '../api/auth';
 
-const AuthContext = createContext({
-  user: {},
-  login: () => {},
-  logout: () => {},
-  isLoading: true,
-});
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+// ** Defaults
+const defaultProvider = {
+  user: null,
+  loading: true,
+  setUser: () => null,
+  setLoading: () => Boolean,
+  login: () => Promise.resolve(),
+  logout: () => Promise.resolve()
+};
+
+const AuthContext = createContext(defaultProvider);
+
+const AuthProvider = ({ children }) => {
+  // ** States
+  const [user, setUser] = useState(defaultProvider.user);
+  const [loading, setLoading] = useState(defaultProvider.loading);
   const dispatch = useDispatch();
-
-  // Cargar el usuario desde localStorage cuando el componente se monta
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-
-  // Guardar el usuario en localStorage cada vez que cambie
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }, [user]);
+  const router = useRouter();
 
   useEffect(() => {
-    const verifyAuth = async () => {
-      try {
-        const token = null; // Aquí deberías obtener el token de donde lo tengas almacenado
-        if (token) {
-          const userData = await checkAuthStatus(token);
+    const initAuth = async () => {
+      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName);
+      if (storedToken) {
+        setLoading(true);
+        try {
+          const userData = await checkAuthStatus(storedToken);
+          setLoading(false);
           setUser(userData);
           dispatch({ type: "LOGIN", payload: userData });
+        } catch (error) {
+          console.error("Failed to verify auth:", error);
+          setLoading(false);
+          setUser(null);
+          if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
+            router.replace('/login');
+          }
         }
-      } catch (error) {
-        console.error("Failed to verify auth:", error);
+      } else {
+        setLoading(false);
       }
-      setIsLoading(false);
     };
+    initAuth();
+  }, [dispatch, router]);
 
-    verifyAuth();
-  }, [dispatch]);
+ 
 
-  const login = async (credentials) => {
+  const handleLogin = async (params, errorCallback) => {
     try {
-      const userData = await loginUser(credentials);
+      const userData = await loginUser(params);
+      
+      const returnUrl = router.query.returnUrl;
       setUser(userData);
-      // Dispatch to Redux store
+      localStorage.setItem('userData', JSON.stringify(userData));
+      const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/';
+      router.replace(redirectURL);
       dispatch({ type: "LOGIN", payload: userData });
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch (err) {
+      if (errorCallback) errorCallback(err);
     }
   };
 
-  const logout = () => {
+  const handleLogout = () => {
     setUser(null);
-    // Dispatch to Redux store
     dispatch({ type: "LOGOUT" });
+    router.push('/login');
   };
 
-  const contextValue = {
+  const values = {
     user,
-    login,
-    logout,
-    isLoading,
+    loading,
+    setUser,
+    setLoading,
+    login: handleLogin,
+    logout: handleLogout
   };
 
-  return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
-  );
-}
+  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
+};
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export { AuthContext, AuthProvider };
